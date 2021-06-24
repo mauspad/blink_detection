@@ -33,8 +33,8 @@ fps = cap.get(cv2.CAP_PROP_FPS)
 frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 vid_dur = frame_count/fps
 mid_dur = vid_dur/2
-startpt = mid_dur-10 #change when troubleshooting
-endpt = mid_dur+10 #change when troubleshooting
+startpt = mid_dur-150 #change when troubleshooting
+endpt = mid_dur+150 #change when troubleshooting
 
 #trim video to 5 min
 ffmpeg_extract_subclip(vidfile, startpt, endpt, targetname=ssid + "_trimmed_vid.wmv")
