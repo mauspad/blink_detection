@@ -82,13 +82,16 @@ time.sleep(1.0)
 
 # loop over frames from the video stream
 while True:
-    # if this is a file video stream, then we need to check if there any more frames left in the buffer to process
-    #if fileStream and not vs.more():
-    #    break
-
-    # grab the frame from the threaded video file stream, resize it, and convert it to grayscale
-    frame = vs.read()
-    frame = imutils.resize(frame, width=600)
+    
+    # try to grab the frame from the threaded video file stream, resize it, and convert it to grayscale
+    try:
+        frame = vs.read()
+        frame = imutils.resize(frame, width=600)
+    
+    # if it doesn't find a frame (ie video end is reached), break
+    except:
+        break
+        
     # loop over various values of gamma
     for gamma in np.arange(0.0, 3.5, 0.5):
         gamma = gamma if gamma > 0 else 0.1
@@ -117,10 +120,10 @@ while True:
     earlist.append(ear)
     print(ear)
     
-    # print list to csv
-    with open(ssid + "_timeseries.csv", "w") as output:
-        writer = csv.writer(output)
-        writer.writerow(earlist)
+# print list to csv
+with open(ssid + "_timeseries.csv", "w") as output:
+    writer = csv.writer(output)
+    writer.writerow(earlist)
 
 # do a bit of cleanup        
 cv2.destroyAllWindows()
