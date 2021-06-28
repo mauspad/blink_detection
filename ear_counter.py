@@ -12,10 +12,21 @@ import dlib
 import cv2
 import csv
 import numpy as np
+import re
+import os
+import platform
 
 #input shit
-vidfile = input("File name with extension: ")
-ssid = input("Subject ID: ")
+vidfile = ""
+dir_files = os.listdir()
+vidfile_re = "^Record.\.wmv$"
+for file in dir_files:
+    if re.search(vidfile_re, file):
+        print("Found " + file)
+        vidfile = file
+if not vidfile:
+    vidfile = input("File name with extension: ")
+ssid = input("Prefix (e.g. 811_FA1_MRI_placebo): ")
 
 #adjust gamma to make features more visible, especially on dark skin
 def adjust_gamma(video, gamma=3):
@@ -118,13 +129,19 @@ while True:
         
     # add to list and display on screen so you know something is happening
     earlist.append(ear)
-    print(ear)
+    #print(ear)
     
 # print list to csv
-with open(ssid + "_timeseries.csv", "w") as output:
+print("[INFO] Writing output...")
+file_delimiter = "/" if platform.system() == "Darwin" else "\\"
+output_path = ssid + "_output" + file_delimiter
+os.mkdir(output_path)
+with open(output_path + ssid + "_timeseries.csv", "w") as output:
     writer = csv.writer(output)
     writer.writerow(earlist)
+os.rename(ssid + "_trimmed_vid.wmv", output_path + ssid + "_trimmed_vid.wmv")
 
-# do a bit of cleanup        
+# do a bit of cleanup       
+print("[INFO] Done :)") 
 cv2.destroyAllWindows()
 vs.stop()
